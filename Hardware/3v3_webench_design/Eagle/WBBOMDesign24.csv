@@ -1,0 +1,7 @@
+﻿Part,Manufacturer,Part Number,Quantity,Price ($),Footprint (mm²),Description
+Cin,Panasonic,25SVPF27MX,1,0.36,53.29,Cap: 27 µF  Total Derated Cap: 27 µF  VDC: 25 V  ESR: 40 mΩ  Package: 5x5.9  
+Cout,AVX,TPSA475K010R1400,1,0.12,10.92,Cap: 4.7 µF  Total Derated Cap: 4.7 µF  VDC: 10 V  ESR: 1.4 Ω  Package: A  
+D1,SMC Diode Solutions,SBRD10200TR,1,0.12,101.71,Type: Schottky  VRRM: 200 V  Io: 10 A  
+L1,Coilcraft,MSS1210-333MEB,1,0.81,204.49,L: 33 µH  DCR: 33 mΩ  IDC: 5.9 A  
+U1,Texas Instruments,LM2596SX-3.3/NOPB,1,1.8,198.82,
+Cf,TDK,C2012C0G1H332J060AA,1,0.03,6.75,Cap: 3.3 nF  Total Derated Cap: 3.3 nF  VDC: 50 V  ESR: 0 Ω  Package: 0805  
