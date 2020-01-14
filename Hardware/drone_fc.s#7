@@ -10556,14 +10556,6 @@ resource</text>
 <label x="147.32" y="388.62" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="3V3_BEAGLE" class="0">
-<segment>
-<pinref part="BRD1" gate="G$1" pin="+3V3"/>
-<wire x1="119.38" y1="426.72" x2="119.38" y2="431.8" width="0.1524" layer="91"/>
-<wire x1="119.38" y1="431.8" x2="132.08" y2="431.8" width="0.1524" layer="91"/>
-<label x="132.08" y="431.8" size="1.778" layer="95" xref="yes"/>
-</segment>
-</net>
 <net name="N$6" class="0">
 <segment>
 <pinref part="IC2" gate="G$1" pin="OUT"/>

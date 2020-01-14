@@ -1,0 +1,121 @@
+
+
+--- ✄ -----------------------
+DRONE POCKETBEAGLE CONFIGURATION STEPS FOLLOWED: 
+  (used a lot of these https://github.com/PocketPilot/PocketPilot/blob/master/SoftwareInstructions.md)
+ ☐ downloaded the IOT operating system (has no gui) from here: https://beagleboard.org/latest-images
+ ☐ use balena etcher to flash disk: https://beagleboard.org/getting-started
+ ☐ boot beagle bone and ssh using 192.168.7.2
+ ☐ follow figure 5 here: https://www.digikey.com/en/maker/blogs/how-to-connect-a-beaglebone-black-to-the-internet-using-usb
+   just to make sure that the networking stuff works
+ ☐ get network connected: (THIS HAS TO BE RERUN AT EVERY BOOT...)
+      sudo -s
+      /sbin/route add default gw 192.168.7.1
+      echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+      exit
+ ☐ updating and loading:
+   sudo apt update && sudo apt upgrade -y
+ ☐ look at disk shit to make sure all good:
+   df -h 
+ ☐ sudo reboot
+ ☐ new software: 
+   sudo apt install -y cpufrequtils i2c-tools minicom g++ pkg-config gawk git make screen python python-dev python-lxml python-pip
+ ☐ sudo pip install future
+ ☐ Install Kernel 4.99 bone rt: sometimes it is necessary to update the tools in order to get the latest kernels:
+   cd /opt/scripts/tools git pull
+ ☐ update rt kernel stuff
+   sudo /opt/scripts/tools/update_kernel.sh --lts-4_19 --bone-rt-channel
+ ☐ Set clock to fixed 1GHz:
+   sudo sed -i 's/GOVERNOR="ondemand"/GOVERNOR="performance"/g' /etc/init.d/cpufrequtils
+ ☐ sudo reboot
+ ☐ confirm the kernel has changed 
+   uname -a
+ ☐ Check SPI correctly mapped (without adding a DTB): ls /dev/spi*
+      /dev/spidev1.0  /dev/spidev2.0  /dev/spidev2.1
+ ☐ Check the serial ports as well (dont forget its the letter "O"): ls /dev/ttyO*
+     /dev/ttyO0 /dev/ttyO1 /dev/ttyO2 /dev/ttyO4
+ ☐ Check that boot environment include the universal cape (used to map IO): cat /boot/uEnv.txt
+    uname_r=4.19.27-bone-rt-r27
+    enable_uboot_overlays=1
+    uboot_overlay_pru=/lib/firmware/AM335X-PRU-UIO-00A0.dtbo
+    enable_uboot_cape_universal=1
+    cmdline=coherent_pool=1M net.ifnames=0 quiet
+
+todo:
+ ☐ The new updated beagle bone kernel is now using uboot overlays for interfacing with hardware and external devices. All IO are configured from the user space with the config-pin utility. This uses a prameter file to automatically configure the pocket. 
+    ☐ It is used this way: sudo config-pin -f ./pin_configuration_file.cfg
+    ☐ The beagle pilot example script is written here: wget https://raw.githubusercontent.com/PocketPilot/PocketPilot/master/config/pocketpilot_pin.cfg
+ ☐ Then we add a service to the system: sudo nano /lib/systemd/system/autopilot.service
+    [Unit]
+    Description=ArduCopter Service
+    After=networking.service
+    StartLimitIntervalSec=0
+    Conflicts=arduplane.service ardupilot.service ardurover.service
+
+    [Service]
+    ExecStartPre=/bin/sleep 30
+    ExecStartPre=/bin/bash -c "/usr/bin/config-pin -f /home/debian/pocketpilot_pin.cfg"
+    ExecStart=/home/debian/arducopter -A udp:192.168.7.1:14550 -B /dev/ttyO2 -C /dev/ttyO4
+
+    Restart=on-failure
+    RestartSec=1
+
+    [Install]
+    WantedBy=multi-user.target
+ ☐ This service starts an unlimited interval service with configures the pins, opens a udp port back to host from two serial ports, and states failure modes
+ ☐ ENABLE THE NEW SERVICE: sudo systemctl enable arducopter.service 
+   the service will start automatically at bootup.
+ ☐ 
+
+--- ✄ -----------------------
+QUESTIONS TO ANSWER:
+  ☐ how does the ardupilot codebase work? (we add a real-time service that initializes on boot)
+    ☐ independent interrupt routines?
+
+
+
+
+###############################################################################
+Drone FLIGHT COMPUTER:
+ ☐ pocketbeagle for these reasons
+   ☐ faster than rpi zero
+   ☐ has PRUs as well
+   ☐ better hardware shit
+ ☐ with OTG wifi USB dongle: https://www.teachmemicro.com/pocketbeagle-wifi/
+ ☐ with RT kernel: https://github.com/PocketPilot/PocketPilot/blob/master/SoftwareInstructions.md
+
+--- ✄ -----------------------
+Good resource links:
+ ☐ https://github.com/mirkix/BBBMINI/blob/master/doc/software/software.md#compile-ardupilot-native-on-beaglebone
+ ☐ http://bbbmini.com/
+ ☐ https://ardupilot.org/
+ ☐ https://ardupilot.org/dev/index.html
+ ☐ https://ardupilot.org/dev/docs/learning-ardupilot-introduction.html
+ ☐ http://beaglebone.cameon.net/home/serial-ports-uart
+ ☐ https://github.com/PocketPilot/PocketPilot/blob/master/SoftwareInstructions.md
+ ☐ https://github.com/mirkix/BBBMINI/blob/master/doc/software/software.md#compile-ardupilot-native-on-beaglebone
+ ☐ http://bbbmini.com/diy-autopilot_community/
+ ☐ https://ardupilot.org/dev/docs/apmcopter-programming-libraries.html
+ ☐ https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#31_Whats_In_the_Package
+ ☐ https://github.com/beagleboard/pocketbeagle/wiki/Peripherals#pwm
+ ☐ http://www.minorw.net/data/ExploringBeagleBone.pdf
+ ☐ https://www.linuxfoundation.org/blog/2013/03/intro-to-real-time-linux-for-embedded-developers/
+ 
+--- ✄ -----------------------
+ NOTES ABOUR REALTIME EMBEDDED LINUX SYSTEMS:
+ ☐ Linux developers often turn to PREEMPT-RT
+ ☐ although most of the time you really do not need the RT thread patch... 
+ ☐ removes all unbounded latencies (example is unfair reader-writer locks)
+ ☐ you simply install this patch.. "makes Linux itself real-time"
+ ☐ "With PREEMPT_RT, if your program runs on the stock Linux kernel, it runs on PREEMPT_RT as well. You can easily make a “real-time bash”."
+ ☐ "Our kernel supports all the posix commands to modify the priority of the tasks in your system"
+ ☐ PREEMPT_RT makes interrupts run as threads, so you have the ability to modify the priorities of interrupts as well, and have user space tasks run at even a higher priority than interrupts. Having interrupts run as threads lets you prioritize the interrupt handlers even when the hardware does not support it.
+ ☐ "The Linux OS was not designed for real‐time or predictable processing. Its ker- nel is not preemptive, which means that once the processor begins executing kernel code it cannot be interrupted. This would be problematic if, for example, you wished to sample a sensor precisely every one millionth of a second. If the precise time arises to take a sample and the kernel is busy with a different task, then it cannot be interrupted. "
+ ☐ 
+
+
+
+--- ✄ -----------------------
+Other Useful Things Learned Along the Way:
+  ☐ mv (option) filename1.ext filename2.ext
+  ☐ 

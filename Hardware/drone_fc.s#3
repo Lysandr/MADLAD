@@ -10784,9 +10784,6 @@ resource</text>
 <pinref part="R5" gate="G$1" pin="1"/>
 <wire x1="525.78" y1="447.04" x2="543.56" y2="447.04" width="0.1524" layer="91"/>
 <wire x1="543.56" y1="447.04" x2="543.56" y2="452.12" width="0.1524" layer="91"/>
-<wire x1="543.56" y1="447.04" x2="563.88" y2="447.04" width="0.1524" layer="91"/>
-<junction x="543.56" y="447.04"/>
-<label x="563.88" y="447.04" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="I2C2.SDA" class="0">
@@ -10855,7 +10852,6 @@ resource</text>
 <approved hash="104,1,269.24,375.92,U1,VDD,3V3,,,"/>
 <approved hash="204,1,233.68,401.32,U1,EP,,,,"/>
 <approved hash="104,1,353.06,320.04,IC1,VDD,3V3,,,"/>
-<approved hash="106,1,119.38,426.72,3V3_BEAGLE,,,,,"/>
 <approved hash="106,1,144.78,396.24,PWM5,,,,,"/>
 <approved hash="106,1,144.78,398.78,PWM6,,,,,"/>
 <approved hash="113,1,24.9555,331.47,X1,,,,,"/>

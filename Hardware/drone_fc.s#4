@@ -10799,6 +10799,11 @@ resource</text>
 <junction x="548.64" y="444.5"/>
 <label x="563.88" y="444.5" size="1.778" layer="95" xref="yes"/>
 </segment>
+<segment>
+<pinref part="BRD1" gate="G$1" pin="I2C2_SDA"/>
+<wire x1="73.66" y1="360.68" x2="63.5" y2="360.68" width="0.1524" layer="91"/>
+<label x="63.5" y="360.68" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
 </net>
 <net name="I2C2.SCL" class="0">
 <segment>
@@ -10809,6 +10814,11 @@ resource</text>
 <wire x1="553.72" y1="441.96" x2="563.88" y2="441.96" width="0.1524" layer="91"/>
 <junction x="553.72" y="441.96"/>
 <label x="563.88" y="441.96" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="BRD1" gate="G$1" pin="I2C2_SCL"/>
+<wire x1="73.66" y1="363.22" x2="63.5" y2="363.22" width="0.1524" layer="91"/>
+<label x="63.5" y="363.22" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="VL53.GPIO1" class="0">
